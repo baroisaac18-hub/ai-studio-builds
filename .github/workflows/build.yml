@@ -1,0 +1,40 @@
+name: build-apk
+
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: 'MainActivity.kt content (base64)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write generated code
+        run: |
+          mkdir -p app/src/main/java/com/example/app
+          echo "${{ github.event.inputs.code }}" | base64 -d > app/src/main/java/com/example/app/MainActivity.kt
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: Build APK
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_id }}
+          name: build-${{ github.run_id }}
+          files: app/build/outputs/apk/debug/app-debug.apk
+          fail_on_unmatched_files: true
