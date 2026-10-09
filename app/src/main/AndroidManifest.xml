@@ -3,7 +3,7 @@
 
     <application
         android:label="AI App"
-        android:theme="@android:style/Theme.Material.Dark">
+        android:theme="@android:style/Theme.Material.Light">
         <activity
             android:name=".MainActivity"
             android:exported="true">
