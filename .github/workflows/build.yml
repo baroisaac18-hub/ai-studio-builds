@@ -20,6 +20,7 @@ jobs:
         run: |
           mkdir -p app/src/main/java/com/example/app
           echo "${{ github.event.inputs.code }}" | base64 -d > app/src/main/java/com/example/app/MainActivity.kt
+          chmod +x gradlew
 
       - uses: actions/setup-java@v4
         with:
